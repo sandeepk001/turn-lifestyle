@@ -1,7 +1,7 @@
 from fasthtml.common import *
 
-# Create FastHTML app
-app = FastHTML()
+# Create FastHTML app with static secret key for Vercel
+app = FastHTML(secret_key="vercel-static-key-12345")
 
 # Product data
 products = [
