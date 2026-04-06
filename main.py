@@ -310,4 +310,5 @@ def get():
         cls='min-h-screen bg-white text-neutral-900 font-sans overflow-x-hidden'
     )
 
-serve()
+# Vercel handler
+handler = app
