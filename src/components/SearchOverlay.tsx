@@ -72,7 +72,7 @@ export default function SearchOverlay({ isOpen, onClose, products, onProductClic
           <div className="max-w-7xl mx-auto px-4 py-8 md:px-8">
             {searchQuery && (
               <p className="text-gray-600 mb-6">
-                {filteredProducts.length} {filteredProducts.length === 1 ? 'result' : 'results'} for "{searchQuery}"
+                {filteredProducts.length} {filteredProducts.length === 1 ? 'result' : 'results'} for &quot;{searchQuery}&quot;
               </p>
             )}
 

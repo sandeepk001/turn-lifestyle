@@ -31,7 +31,7 @@ export default function Hero({ featuredProducts, onProductClick }: HeroProps) {
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlide]);
 
   const getVisibleProducts = () => {
     const products = [];
