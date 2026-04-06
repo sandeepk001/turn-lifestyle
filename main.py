@@ -1,7 +1,8 @@
 from fasthtml.common import *
 from fasthtml.ft import *
 
-app, rt = fastapp()
+# Create FastHTML app
+app = FastHTML()
 
 # Product data
 products = [
@@ -292,7 +293,7 @@ def Footer():
         cls='bg-neutral-950 text-white py-24 px-6 md:px-12 rounded-t-[4rem]'
     )
 
-@rt('/')
+@app.get('/')
 def get():
     return Title('TURN Lifestyle - Premium Apparel'), Body(
         Header(),
@@ -309,6 +310,3 @@ def get():
         Footer(),
         cls='min-h-screen bg-white text-neutral-900 font-sans overflow-x-hidden'
     )
-
-# Vercel handler
-handler = app
