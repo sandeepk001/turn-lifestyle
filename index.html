@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>TURN Lifestyle - Premium Apparel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .floating-shadow {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes slideInFromRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideInFromBottom {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .animate-in {
+            animation-duration: 500ms;
+            animation-fill-mode: both;
+        }
+        .slide-in-from-right {
+            animation-name: slideInFromRight;
+        }
+        .zoom-in-95 {
+            animation-name: zoomIn;
+        }
+        .fade-in {
+            animation-name: fadeIn;
+        }
+        .slide-in-from-bottom-10 {
+            animation-name: slideInFromBottom;
+        }
+        .selection\:bg-black ::selection {
+            background-color: black;
+            color: white;
+        }
+        .selection\:text-white ::selection {
+            color: white;
+        }
+        /* Enhanced mobile responsiveness */
+        @media screen and (max-width: 640px) {
+            .hero-text {
+                font-size: 2.5rem !important;
+                line-height: 1 !important;
+            }
+            .hero-subtitle {
+                font-size: 0.875rem !important;
+            }
+            .product-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            .modal-content {
+                margin: 1rem !important;
+                max-height: 95vh !important;
+            }
+        }
+        @media screen and (max-width: 480px) {
+            .hero-text {
+                font-size: 2rem !important;
+            }
+            .category-filters {
+                padding: 0.5rem !important;
+            }
+            .category-btn {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.75rem !important;
+            }
+        }
+        @media screen and (min-height: 1200px) {
+            .hero-section {
+                min-height: 100vh !important;
+            }
+        }
+        @media screen and (max-height: 700px) {
+            .hero-section {
+                min-height: 80vh !important;
+                padding-top: 6rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white text-neutral-900 font-sans selection:bg-black selection:text-white overflow-x-hidden">
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 h-20 bg-white/70 backdrop-blur-xl border-b border-neutral-100 px-6 md:px-12 flex items-center justify-between">
+        <div class="flex items-center gap-2 cursor-pointer group" onclick="scrollToTop()">
+            <div class="w-9 h-9 bg-black rounded-full flex items-center justify-center transition-transform group-hover:rotate-180 duration-500 shadow-lg">
+                <span class="text-white font-black text-sm">T</span>
+            </div>
+            <h1 class="text-2xl font-black tracking-tighter uppercase">TURN</h1>
+        </div>
+        
+        <div class="hidden lg:flex items-center gap-10">
+            <button onclick="scrollToSection('collection')" class="text-[11px] font-bold uppercase tracking-[0.3em] hover:opacity-50 transition">Collection</button>
+            <button onclick="scrollToSection('about')" class="text-[11px] font-bold uppercase tracking-[0.3em] hover:opacity-50 transition">About Label</button>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button onclick="openSearch()" class="p-2.5 rounded-full hover:bg-gray-100 transition" aria-label="Search">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+            <button 
+                onclick="toggleWishlist()"
+                class="p-2.5 rounded-full hover:bg-gray-100 transition relative" 
+                aria-label="Wishlist"
+            >
+                <svg id="headerWishlistIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+                <span id="wishlistCount" class="absolute top-1 right-1 w-4 h-4 bg-black text-white text-[9px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+            </button>
+            <button 
+                onclick="scrollToSection('contact')"
+                class="ml-2 hidden sm:flex items-center gap-2 px-6 py-2.5 bg-black text-white rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-neutral-800 transition shadow-xl shadow-black/10"
+            >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                Contact
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6 md:px-12 bg-[#FDFDFD] relative overflow-hidden hero-section">
+        <div class="max-w-7xl mx-auto flex flex-col items-center relative">
+            <div class="flex gap-2 md:gap-4 lg:gap-10 items-end justify-center mb-12 md:mb-20 h-48 md:h-72 lg:h-[500px] w-full relative group">
+                <button onclick="prevHero()" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 md:p-4 bg-white/90 backdrop-blur shadow-2xl rounded-full border border-neutral-100 hover:scale-110 active:scale-95 transition opacity-0 group-hover:opacity-100 -translate-x-10 group-hover:translate-x-0 duration-300">
+                    <svg class="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+
+                <div id="heroProducts" class="flex gap-2 md:gap-4 lg:gap-10 items-end justify-center h-full w-full">
+                    <!-- Hero products will be inserted here -->
+                </div>
+
+                <button onclick="nextHero()" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 md:p-4 bg-white/90 backdrop-blur shadow-2xl rounded-full border border-neutral-100 hover:scale-110 active:scale-95 transition opacity-0 group-hover:opacity-100 translate-x-10 group-hover:translate-x-0 duration-300">
+                    <svg class="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="text-center space-y-4 px-4">
+                <h2 class="text-3xl md:text-5xl lg:text-7xl xl:text-9xl font-black tracking-tighter uppercase leading-none italic hero-text">Style Revolved.</h2>
+                <p class="text-neutral-400 max-w-lg mx-auto text-sm md:text-base lg:text-lg font-medium italic tracking-tight hero-subtitle">Premium minimalist apparel designed for turn-lifestyle.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="sticky top-20 z-40 bg-white/80 backdrop-blur-md py-4 md:py-6 px-4 md:px-12 border-b border-neutral-100 category-filters">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
+            <div class="flex gap-1 md:gap-2 overflow-x-auto no-scrollbar w-full md:w-auto pb-2 md:pb-0">
+                <button onclick="filterProducts('All')" class="category-btn px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-black text-white shadow-lg scale-105">All</button>
+                <button onclick="filterProducts('Night Pants')" class="category-btn px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-neutral-50 text-neutral-400 hover:bg-neutral-100">Night Pants</button>
+                <button onclick="filterProducts('T-Shirts')" class="category-btn px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-neutral-50 text-neutral-400 hover:bg-neutral-100">T-Shirts</button>
+                <button onclick="filterProducts('Trousers')" class="category-btn px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-neutral-50 text-neutral-400 hover:bg-neutral-100">Trousers</button>
+                <button onclick="filterProducts('Shirts')" class="category-btn px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-neutral-50 text-neutral-400 hover:bg-neutral-100">Shirts</button>
+                <button onclick="filterProducts('Hoodies')" class="category-btn px-4 py-2 md:px-6 md:py-2.5 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-neutral-50 text-neutral-400 hover:bg-neutral-100">Hoodies</button>
+            </div>
+            <div class="flex items-center gap-2 md:gap-4 text-neutral-400 text-[8px] md:text-[10px] font-black uppercase tracking-widest">
+                <svg class="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z"></path>
+                </svg>
+                <span>Refine Collection</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection Section -->
+    <section id="collection" class="max-w-7xl mx-auto px-4 md:px-12 py-12 md:py-20 min-h-[60vh]">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 lg:gap-12 product-grid">
+            <!-- Products will be inserted here -->
+        </div>
+        <div id="noResults" class="text-center py-40 hidden">
+            <h3 class="text-4xl font-black uppercase italic mb-4">Void found.</h3>
+            <button onclick="resetFilters()" class="font-black underline uppercase tracking-[0.3em] text-xs">Reset All Filters</button>
+        </div>
+    </section>
+
+    <!-- Wishlist Overlay -->
+    <div id="wishlistOverlay" class="fixed inset-0 z-[200] bg-white hidden overflow-y-auto">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-20">
+            <div class="flex justify-between items-end mb-16 border-b border-neutral-100 pb-8">
+                <div>
+                    <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter italic">Your Saved Pieces</h2>
+                    <p class="text-neutral-400 font-medium mt-4 uppercase tracking-[0.2em] text-xs">A curated selection of your Turn-lifestyle favorites</p>
+                </div>
+                <button onclick="closeWishlist()" class="p-4 hover:bg-neutral-50 rounded-full transition group">
+                    <svg class="w-10 h-10 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="wishlistGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+                <!-- Wishlist items will appear here -->
+            </div>
+
+            <div id="emptyWishlist" class="text-center py-40 hidden">
+                <h3 class="text-3xl font-black uppercase italic mb-4">Your list is empty.</h3>
+                <p class="text-neutral-400 font-medium mb-10">Start saving pieces to create your perfect collection.</p>
+                <button onclick="closeWishlist()" class="px-10 py-5 bg-black text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-neutral-800 transition shadow-xl">Back to Gallery</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-neutral-950 text-white py-24 px-6 md:px-12 rounded-t-[4rem]">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-24 items-start">
+            <div class="space-y-10">
+                <h3 class="text-5xl font-black tracking-tighter italic uppercase">TURN</h3>
+                <p class="text-neutral-500 leading-relaxed text-lg italic max-w-sm">Handcrafted in Bangalore. We prioritize craftsmanship over trends.</p>
+            </div>
+            <div class="flex flex-col gap-8">
+                <h4 class="text-[10px] font-black uppercase text-neutral-700 tracking-[0.4em]">Navigation</h4>
+                <div class="flex flex-col gap-4 text-2xl font-light italic">
+                    <button onclick="scrollToSection('collection')" class="hover:text-neutral-400 transition w-fit text-left">Collection</button>
+                    <a href="https://instagram.com/turn_lifestyle" class="hover:text-neutral-400 transition w-fit text-left">Instagram</a>
+                    <a href="https://wa.me/918549065824" class="hover:text-neutral-400 transition w-fit text-left">WhatsApp</a>
+                </div>
+            </div>
+            <div class="space-y-10">
+                 <h4 class="text-[10px] font-black uppercase text-neutral-700 tracking-[0.4em]">Support</h4>
+                 <button onclick="scrollToSection('contact')" class="w-full py-6 bg-white text-black rounded-[2rem] font-black uppercase tracking-widest hover:bg-neutral-200 transition shadow-2xl active:scale-95">Contact Us</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Search Overlay -->
+    <div id="searchOverlay" class="fixed inset-0 z-50 bg-white hidden">
+        <div class="h-full flex flex-col">
+            <div class="border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 py-6 md:px-8">
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1 relative">
+                            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <input id="searchInput" type="text" placeholder="Search products..." class="w-full pl-14 pr-4 py-4 text-lg border-2 border-gray-300 rounded-full focus:outline-none focus:border-black transition-colors">
+                        </div>
+                        <button onclick="closeSearch()" class="p-3 hover:bg-gray-100 rounded-full transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto">
+                <div class="max-w-7xl mx-auto px-4 py-8 md:px-8">
+                    <div id="searchResults" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <!-- Search results will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm hidden">
+        <div class="relative w-full max-w-6xl max-h-[90vh] bg-white rounded-[2rem] overflow-hidden shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-lg hover:shadow-xl transition-all">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div class="overflow-y-auto max-h-[90vh]">
+                <div class="grid md:grid-cols-2 gap-8 p-6 md:p-12">
+                    <div class="space-y-4">
+                        <div class="relative aspect-[3/4] bg-gray-50 rounded-[2rem] overflow-hidden">
+                            <img id="modalMainImage" src="" alt="" class="w-full h-full object-contain p-8">
+                        </div>
+                        <div id="modalGallery" class="grid grid-cols-3 gap-3">
+                            <!-- Gallery thumbnails will appear here -->
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex-1">
+                            <h2 id="modalTitle" class="text-2xl md:text-5xl font-bold mb-4 leading-tight break-words"></h2>
+                            <p id="modalCategory" class="text-lg text-gray-600 mb-4"></p>
+                            <div class="flex items-center gap-4 mb-6">
+                                <p id="modalPrice" class="text-4xl font-bold"></p>
+                                <div class="flex items-center gap-1 px-3 py-1 bg-yellow-50 rounded-full">
+                                    <svg class="w-5 h-5 fill-yellow-400 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span id="modalRating" class="font-semibold"></span>
+                                </div>
+                            </div>
+                            <p id="modalDescription" class="text-gray-700 leading-relaxed mb-6"></p>
+                            <div class="mb-6">
+                                <h3 class="text-sm font-semibold mb-3 uppercase tracking-wide">Available Colors</h3>
+                                <div id="modalColors" class="flex gap-3">
+                                    <!-- Color swatches will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 mt-6">
+                            <button onclick="whatsappInquiry()" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-colors shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.075c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.123-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                Inquire via WhatsApp
+                            </button>
+                            <button onclick="instagramLink()" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                                </svg>
+                                Follow on Instagram
+                            </button>
+                            <button onclick="showInquiryForm()" class="w-full px-6 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-colors">
+                                Send Inquiry via Form
+                            </button>
+                        </div>
+                        <div id="inquiryForm" class="hidden mt-6 space-y-4 p-6 bg-gray-50 rounded-2xl">
+                            <h3 class="font-semibold text-lg mb-4">Send us your inquiry</h3>
+                            <input id="inquiryName" type="text" placeholder="Your Name" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black">
+                            <input id="inquiryPhone" type="tel" placeholder="Phone Number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black">
+                            <input id="inquiryEmail" type="email" placeholder="Email Address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black">
+                            <button onclick="submitInquiry()" class="w-full px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors">
+                                Submit Inquiry
+                            </button>
+                        </div>
+                    </div>
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span id="modalRating" class="font-semibold"></span>
+                                </div>
+                            </div>
+                            <p id="modalDescription" class="text-gray-700 leading-relaxed mb-6"></p>
+                            <div class="mb-6">
+                                <h3 class="text-sm font-semibold mb-3 uppercase tracking-wide">Available Colors</h3>
+                                <div id="modalColors" class="flex gap-3">
+                                    <!-- Color swatches will appear here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 mt-6">
+                            <button onclick="whatsappInquiry()" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600 transition-colors shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.075c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.123-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                Inquire via WhatsApp
+                            </button>
+                            <button onclick="instagramLink()" class="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z"/>
+                                </svg>
+                                Follow on Instagram
+                            </button>
+                            <button onclick="showInquiryForm()" class="w-full px-6 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-colors">
+                                Send Inquiry via Form
+                            </button>
+                        </div>
+                        <div id="inquiryForm" class="hidden mt-6 space-y-4 p-6 bg-gray-50 rounded-2xl">
+                            <h3 class="font-semibold text-lg mb-4">Send us your inquiry</h3>
+                            <input id="inquiryName" type="text" placeholder="Your Name" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black">
+                            <input id="inquiryPhone" type="tel" placeholder="Phone Number" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black">
+                            <input id="inquiryEmail" type="email" placeholder="Email Address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-black">
+                            <button onclick="submitInquiry()" class="w-full px-6 py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors">
+                                Submit Inquiry
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product data with premium naming
+        const products = [
+            {
+                id: 'np-01',
+                name: 'Noir Enchanté Premium Night Gown',
+                category: 'Night Pants',
+                price: '₹1,299',
+                rating: 4.9,
+                description: 'A masterpiece of loungewear comfort. Crafted from premium 100% long-staple cotton, this night gown offers a weightless feel with a sophisticated, draped silhouette.',
+                colors: ['#1a1a1a', '#2c3e50', '#7f8c8d'],
+                mainImg: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1582552938357-32b906df40cb?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'ts-01',
+                name: 'Oversized Boxy Essential Tee',
+                category: 'T-Shirts',
+                price: '₹899',
+                rating: 4.8,
+                description: 'The foundation of the modern wardrobe. Features a dropped shoulder design and heavyweight 240 GSM fabric that holds its shape wash after wash.',
+                colors: ['#ffffff', '#000000', '#f5f5dc'],
+                mainImg: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'tr-01',
+                name: 'Urban Multi-Pocket Cargo Trousers',
+                category: 'Trousers',
+                price: '₹1,899',
+                rating: 4.7,
+                description: 'Utility meets luxury. These cargos feature precision tailoring and functional storage, finished with custom TURN-lifestyle hardware and reinforced seams.',
+                colors: ['#3d3d3d', '#4b5320'],
+                mainImg: 'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'bp-01',
+                name: 'Shadow Street Baggy Joggers',
+                category: 'Hoodies',
+                price: '₹1,499',
+                rating: 4.6,
+                description: 'Designed for the motion of modern life. These joggers provide a relaxed baggy fit without compromising on aesthetic precision or premium feel.',
+                colors: ['#000000', '#f3f4f6'],
+                mainImg: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1515468381879-40d0ded81044?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'ps-01',
+                name: 'Luxe Silk Night Pantaloon',
+                category: 'Night Pants',
+                price: '₹1,799',
+                rating: 4.9,
+                description: 'Indulgent nightwear crafted from silk-blend fabric. Features elasticated waist with adjustable drawstring and side pockets for practical luxury.',
+                colors: ['#2c3e50', '#8b4513', '#4a5568'],
+                mainImg: 'https://images.unsplash.com/photo-1582552938357-32b906df40cb?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1582552938357-32b906df40cb?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'ct-01',
+                name: 'Vintage Wash Crew Neck',
+                category: 'T-Shirts',
+                price: '₹999',
+                rating: 4.5,
+                description: 'Timeless crew neck with vintage wash treatment. Pre-shrunk fabric ensures consistent fit while the wash adds character to each piece.',
+                colors: ['#f5f5dc', '#1a1a1a', '#8b7355'],
+                mainImg: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'cs-01',
+                name: 'Minimalist Oxford Shirt',
+                category: 'Shirts',
+                price: '₹2,199',
+                rating: 4.8,
+                description: 'Understated elegance in premium oxford cotton. Clean lines and precise tailoring make this a versatile piece for any occasion.',
+                colors: ['#ffffff', '#1a1a1a', '#4169e1'],
+                mainImg: 'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1515468381879-40d0ded81044?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'cc-01',
+                name: 'Tailored Stretch Chinos',
+                category: 'Trousers',
+                price: '₹2,499',
+                rating: 4.7,
+                description: 'Modern chinos with stretch comfort. Premium fabric with subtle sheen, featuring slanted pockets and back welt pockets for a refined look.',
+                colors: ['#8b7355', '#2f4f4f', '#000000'],
+                mainImg: 'https://images.unsplash.com/photo-1515468381879-40d0ded81044?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1515468381879-40d0ded81044?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80&w=800'
+                ]
+            },
+            {
+                id: 'mh-01',
+                name: 'Urban Street Hoodie',
+                category: 'Hoodies',
+                price: '₹2,799',
+                rating: 4.9,
+                description: 'Street-ready hoodie with premium French terry fabric. Features kangaroo pocket, adjustable hood, and ribbed cuffs for authentic style.',
+                colors: ['#1a1a1a', '#4a5568', '#dc143c'],
+                mainImg: 'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=800',
+                gallery: [
+                    'https://images.unsplash.com/photo-1552346154-21d32810aba3?auto=format&fit=crop&q=80&w=800',
+                    'https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&q=80&w=800'
+                ]
+            }
+        ];
+
+        let currentCategory = 'All';
+        let wishlist = new Set();
+        let showWishlistMode = false;
+        let currentModalProduct = null;
+        let heroIndex = 0;
+        let searchQuery = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts(products);
+            updateHeroProducts();
+            updateWishlistCount();
+        });
+
+        // Navigation functions
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Hero functions
+        function updateHeroProducts() {
+            const heroContainer = document.getElementById('heroProducts');
+            const heroProducts = [];
+            for (let i = 0; i < 3; i++) {
+                const index = (heroIndex + i) % products.length;
+                heroProducts.push(products[index]);
+            }
+            
+            heroContainer.innerHTML = heroProducts.map((product, idx) => `
+                <div 
+                    class="relative group/item transition-all hover:-translate-y-6 duration-700 cursor-pointer animate-in fade-in slide-in-from-bottom-10
+                    ${idx === 0 ? 'w-1/4 h-[65%]' : idx === 1 ? 'w-1/3 h-full' : 'w-1/4 h-[80%]'}"
+                    onclick="openModal('${product.id}')"
+                >
+                    <img src="${product.mainImg}" class="w-full h-full object-contain drop-shadow-2xl ${idx === 1 ? 'scale-110' : ''}" alt="${product.name}" />
+                </div>
+            `).join('');
+        }
+
+        function nextHero() {
+            heroIndex = (heroIndex + 1) % products.length;
+            updateHeroProducts();
+        }
+
+        function prevHero() {
+            heroIndex = (heroIndex - 1 + products.length) % products.length;
+            updateHeroProducts();
+        }
+
+        // Product functions
+        function createProductCard(product) {
+            const isWishlisted = wishlist.has(product.id);
+            return `
+                <div class="group cursor-pointer bg-white rounded-[2rem] p-4 border border-gray-100 hover:border-black transition-all duration-500 hover:shadow-2xl hover:shadow-black/5" onclick="openModal('${product.id}')">
+                    <div class="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gray-50 mb-4">
+                        <img src="${product.mainImg}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        <button 
+                            class="absolute top-3 right-3 p-2 rounded-lg shadow-sm transition-all z-20 ${
+                                isWishlisted ? 'bg-black text-white scale-110' : 'bg-white/90 backdrop-blur-sm hover:bg-black hover:text-white'
+                            }"
+                            onclick="event.stopPropagation(); toggleWishlistItem('${product.id}')"
+                        >
+                            <svg class="w-5 h-5" fill="${isWishlisted ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="px-2">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-bold text-lg leading-tight line-clamp-1">${product.name}</h3>
+                            <span class="font-bold text-lg">${product.price}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                            <span class="text-orange-400">★</span>
+                            <span class="font-medium text-black">${product.rating}</span>
+                            <span>•</span>
+                            <span class="capitalize">${product.category.toLowerCase()}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProducts(productsToRender) {
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (productsToRender.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+            } else {
+                grid.innerHTML = productsToRender.map(product => createProductCard(product)).join('');
+                noResults.classList.add('hidden');
+            }
+        }
+
+        function filterProducts(category) {
+            currentCategory = category;
+            showWishlistMode = false;
+            
+            // Update category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.textContent === category) {
+                    btn.className = 'category-btn px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-black text-white shadow-lg scale-105';
+                } else {
+                    btn.className = 'category-btn px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap bg-neutral-50 text-neutral-400 hover:bg-neutral-100';
+                }
+            });
+            
+            // Filter and render products
+            const filtered = category === 'All' ? products : products.filter(p => p.category === category);
+            renderProducts(filtered);
+        }
+
+        function resetFilters() {
+            searchQuery = '';
+            currentCategory = 'All';
+            filterProducts('All');
+        }
+
+        function toggleWishlistItem(productId) {
+            if (wishlist.has(productId)) {
+                wishlist.delete(productId);
+            } else {
+                wishlist.add(productId);
+            }
+            updateWishlistCount();
+            
+            // Re-render current view
+            if (showWishlistMode) {
+                showWishlist();
+            } else {
+                filterProducts(currentCategory);
+            }
+        }
+
+        function updateWishlistCount() {
+            const countElement = document.getElementById('wishlistCount');
+            const headerIcon = document.getElementById('headerWishlistIcon');
+            
+            if (wishlist.size > 0) {
+                countElement.textContent = wishlist.size;
+                countElement.classList.remove('hidden');
+                headerIcon.classList.add('fill-current');
+            } else {
+                countElement.classList.add('hidden');
+                headerIcon.classList.remove('fill-current');
+            }
+        }
+
+        function toggleWishlist() {
+            showWishlistMode = !showWishlistMode;
+            if (showWishlistMode) {
+                showWishlist();
+            } else {
+                filterProducts(currentCategory);
+            }
+        }
+
+        function showWishlist() {
+            showWishlistMode = true;
+            const overlay = document.getElementById('wishlistOverlay');
+            const grid = document.getElementById('wishlistGrid');
+            const emptyState = document.getElementById('emptyWishlist');
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('animate-in', 'slide-in-from-right');
+            document.body.style.overflow = 'hidden';
+            
+            const wishlistProducts = products.filter(p => wishlist.has(p.id));
+            
+            if (wishlistProducts.length > 0) {
+                grid.innerHTML = wishlistProducts.map(product => `
+                    <div class="group relative cursor-pointer" onclick="openModal('${product.id}')">
+                        <div class="aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-neutral-50 mb-6">
+                            <img src="${product.mainImg}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="${product.name}" />
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-black text-xl uppercase italic tracking-tight">${product.name}</h3>
+                                <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest mt-1">${product.category}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-bold text-lg">${product.price}</p>
+                                <button onclick="event.stopPropagation(); toggleWishlistItem('${product.id}')" class="text-neutral-300 hover:text-black transition-colors mt-2">
+                                    <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+            } else {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            }
+        }
+
+        function closeWishlist() {
+            const overlay = document.getElementById('wishlistOverlay');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = 'unset';
+            showWishlistMode = false;
+            filterProducts(currentCategory);
+        }
+
+        // Modal functions
+        function openModal(productId) {
+            currentModalProduct = products.find(p => p.id === productId);
+            if (!currentModalProduct) return;
+            
+            const modal = document.getElementById('productModal');
+            document.getElementById('modalTitle').textContent = currentModalProduct.name;
+            document.getElementById('modalCategory').textContent = currentModalProduct.category;
+            document.getElementById('modalPrice').textContent = currentModalProduct.price;
+            document.getElementById('modalRating').textContent = currentModalProduct.rating;
+            document.getElementById('modalDescription').textContent = currentModalProduct.description;
+            document.getElementById('modalMainImage').src = currentModalProduct.mainImg;
+            document.getElementById('modalMainImage').alt = currentModalProduct.name;
+            
+            // Render colors
+            const colorsContainer = document.getElementById('modalColors');
+            colorsContainer.innerHTML = currentModalProduct.colors.map(color => 
+                `<div class="w-10 h-10 rounded-full border-2 border-gray-300 shadow-sm" style="background-color: ${color}" title="${color}"></div>`
+            ).join('');
+            
+            // Render gallery
+            const galleryContainer = document.getElementById('modalGallery');
+            galleryContainer.innerHTML = currentModalProduct.gallery.map((img, idx) => 
+                `<button onclick="changeModalImage('${img}')" class="w-24 h-24 rounded-3xl overflow-hidden border-2 flex-shrink-0 transition-all border-black scale-105 shadow-xl">
+                    <img src="${img}" class="w-full h-full object-cover" alt="" />
+                </button>`
+            ).join('');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('animate-in', 'zoom-in-95');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'unset';
+            document.getElementById('inquiryForm').classList.add('hidden');
+        }
+
+        function changeModalImage(imageSrc) {
+            document.getElementById('modalMainImage').src = imageSrc;
+        }
+
+        function showInquiryForm() {
+            const form = document.getElementById('inquiryForm');
+            form.classList.toggle('hidden');
+        }
+
+        function submitInquiry() {
+            const name = document.getElementById('inquiryName').value;
+            const phone = document.getElementById('inquiryPhone').value;
+            const email = document.getElementById('inquiryEmail').value;
+            
+            if (name && phone && email) {
+                console.log('Inquiry submitted:', { name, phone, email, product: currentModalProduct.name });
+                alert('Thank you for your inquiry! We will contact you soon.');
+                document.getElementById('inquiryName').value = '';
+                document.getElementById('inquiryPhone').value = '';
+                document.getElementById('inquiryEmail').value = '';
+                document.getElementById('inquiryForm').classList.add('hidden');
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        function whatsappInquiry() {
+            const message = `Hi TURN! I am interested in ${currentModalProduct.name} (${currentModalProduct.price}).`;
+            const whatsappUrl = `https://wa.me/918549065824?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function instagramLink() {
+            window.open('https://instagram.com/turn_lifestyle', '_blank');
+        }
+
+        // Search functions
+        function openSearch() {
+            document.getElementById('searchOverlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('searchInput').focus();
+        }
+
+        function closeSearch() {
+            document.getElementById('searchOverlay').classList.add('hidden');
+            document.body.style.overflow = 'unset';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        // Search functionality
+        document.getElementById('searchInput')?.addEventListener('input', function(e) {
+            searchQuery = e.target.value.toLowerCase();
+            const results = products.filter(product => 
+                product.name.toLowerCase().includes(searchQuery) ||
+                product.category.toLowerCase().includes(searchQuery)
+            );
+            
+            const resultsContainer = document.getElementById('searchResults');
+            if (searchQuery && results.length > 0) {
+                resultsContainer.innerHTML = results.map(product => createProductCard(product)).join('');
+            } else if (searchQuery && results.length === 0) {
+                resultsContainer.innerHTML = '<div class="text-center py-20"><p class="text-xl text-gray-500">No products found</p></div>';
+            } else if (!searchQuery) {
+                resultsContainer.innerHTML = '<div class="text-center py-20"><p class="text-xl text-gray-500">Start typing to search products</p></div>';
+            }
+        });
+
+        // Close modal on escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeSearch();
+                if (showWishlistMode) closeWishlist();
+            }
+        });
+
+        // Auto-rotate hero
+        setInterval(nextHero, 5000);
+    </script>
+</body>
+</html>
